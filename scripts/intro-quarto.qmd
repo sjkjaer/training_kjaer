@@ -1,25 +1,102 @@
 ---
 title: "introduction to quarto"
 format: html
+bibliography: references.bib
 ---
 
-## Quarto
+# Introduction
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+## About the data
 
-## Running Code
+-   Water sample data from Arctic Ocean
+-   Data downloaded from the Arctic Data Center: [Tweedie ADC data](https://arcticdata.io/catalog/view/doi:10.18739/A25T3FZ8X)
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Setup
 
 ```{r}
-1 + 1
+#install.packages("readr")
+library(readr)
+#helps read in data
+library(here)
+#can also check boxes in the packages tab, but then its not reproducible
+
 ```
 
-You can add options to executable code like this
+## Read in data
 
 ```{r}
+#| warning: false
+
+bg_chem <- read_csv(here("data/BGchem2008data.csv"))
+```
+
+# Analysis
+
+## calculate summary statistics
+
+```{r, echo=FALSE, eval=FALSE}
+#interchangeable syntax
 #| echo: false
-2 * 2
+#exclude source code in the output
+#| eval: false
+#exclude analysis in the output
+
+colnames(bg_chem)
+#print column names
+
+str(bg_chem)
+#show the data structure
+
+head(bg_chem)
+
+summary(bg_chem)
+#summary of each column
+
+unique(bg_chem$Target_Depth)
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+## calculate mean Redfield ratio
+
+```{r}
+# calculate some means
+nitrate<-mean(bg_chem$NO3)
+#assign value
+nitrite<-mean(bg_chem$NO2)
+amm<-mean(bg_chem$NH4)
+phos<-mean(bg_chem$P)
+```
+
+## plot Redfield ratio
+
+```{r}
+ratio <- (nitrate + nitrite + amm) / phos
+```
+
+Here is the ratio we calculated: `r round(ratio)`
+
+#substituted the words for the value in rendering!!
+
+# Conclusion
+
+##reference of fonts
+
+## hashtags is a large title
+
+### more hastags is smaller
+
+###### a bunch of hashtags is even smaller
+
+*stars on both ends is italics*
+
+**bold is two stars**
+
+-   one front star AND space is bullet point
+
+[@oke2020; @oke2020a]
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+|      |      |      |
+|      |      |      |
+|      |      |      |

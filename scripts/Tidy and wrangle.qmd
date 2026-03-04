@@ -232,7 +232,5 @@ head(mean_region)
 ```{r}
 library(here)
 write_csv(mean_region, here("data/mean_catch_by_region.csv"))
-
-
 ```
 
