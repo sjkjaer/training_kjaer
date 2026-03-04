@@ -3,3 +3,16 @@ title: "github pages example"
 format: html
 ---
 
+#usethis::browse_github() takes you to github
+
+## Course lessons
+
+- intro to quarto
+- intro to git and github
+- cleaning and wrangling data
+
+## Practice schedule
+
+- practice I
+- practice II
+
