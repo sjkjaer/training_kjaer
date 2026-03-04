@@ -7,9 +7,9 @@ format: html
 
 ## Course lessons
 
-- intro to quarto
-- intro to git and github
-- cleaning and wrangling data
+- [intro to quarto](scripts/intro-quarto.html)
+- intro to git and [github](https://github.com/sjkjaer/training_kjaer)
+- [cleaning and wrangling data](scripts/Tidy and wrangle.html)
 
 ## Practice schedule
 
