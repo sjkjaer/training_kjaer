@@ -42,4 +42,56 @@ glimpse(egg_measures)
 #18,749 of 12
 ```
 
+### q3
+```{r}
+View(species)
+View(predator_survey)
+#predator_survey$species = species$alpha_code
+
+#my attempt, renamed column
+names(species)[names(species) == "alpha_code"] <- "species_code"
+head(species)
+pred_sp <- left_join(predator_survey, species, by = "species")
+head(pred_sp)
+
+predator_comm_names <- left_join(predator_survey,
+                                 species,
+                                 by = c("species" = "alpha_code"))
+```
+
+
+### q4
+```{r}
+#' Adding common names
+#'
+#' @param df  a dataframe containing a column 'species' with species codes
+#' @param species a dataframe containing a column 'alpha_code' and 'common_names'
+#'
+#' @returns original dataframe df with an additional column, 'common_names' 
+#' @export 
+#'
+#' @examples add_common(df = predator_survey, species = species)
+add_common <- function(df, species) {
+  df_sp <- left_join(df, #df1
+            species, #df2
+            by = c("species" = "alpha_code")) #col1 and col2
+            return(df_sp) #new df
+}
+
+```
+
+
+### q5
+```{r}
+head(nest_data)
+#5577 of 104
+nest_data1 <- nest_data %>% 
+  select(!c(starts_with("unk")))
+```
+
+### extra
+```{r}
+#add error messages to functions
+
+```
 
