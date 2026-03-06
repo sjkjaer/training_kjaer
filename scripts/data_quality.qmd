@@ -1,0 +1,69 @@
+---
+title: "data_quality"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+## Quick data summaries using `skimr` and `visdat`
+
+```{r, message = FALSE, warning = FALSE}
+library(skimr)
+library(visdat)
+library(readr)
+library(dplyr)
+library(ggplot2)
+#benefits of loading discreet packages or the tidyverse group
+#the more packages you load the more name conflicts you have, minimalist is better
+```
+
+
+```{r}
+bg_chem <- read_csv("~/training_kjaer/data/BGchem2008data.csv")
+skim(bg_chem)
+#interactable data overview when rendered
+
+bg_chem %>% 
+  select(Station, O2) %>% 
+  group_by(Station) %>% 
+  skim()
+```
+
+```{r}
+bg_chem_clean <- bg_chem %>%
+  mutate(O2 = na_if(O2, -99))
+#slower
+
+bg_chem_clean <- read_csv("~/training_kjaer/data/BGchem2008data.csv", na = "-99")
+#can tell read_csv what the missing value code is, will make it na
+```
+
+```{r}
+vis_dat(bg_chem_clean, facet = Station) +
+  theme(axis.text.x = element_text(angle = 45, vjust= 0))
+```
+
+## Formalize Validation with `pointblank`
+
+```{r}
+library(pointblank)
+df <- bg_chem_clean %>%
+  col_vals_gt(columns = O2, value = 0, na_pass = TRUE)
+#must be greater than 0, na's allowed
+```
+
+```{r}
+al <-action_levels(warn_at = 1, stop_at = 10)
+#limits that can be passed to all the rules or just one
+al_latlong <- action_levels(warn_at = 1, stop_at = 1)
+
+bg_chem_clean %>% 
+    create_agent(actions = al) %>% 
+    col_vals_gt(vars(O2, NO3, NO2, NH4, P, Si), value = 0, na_pass = TRUE) %>% 
+    col_vals_between(columns = vars(CTD_Salinity, Bottle_Salinity), left = 0, right = 42, na_pass = TRUE) %>% 
+    col_vals_between(Latitude, left = -90, right = 90, actions = al_latlong) %>%
+    col_vals_between(Longitude, left = -180, right = 180, actions = al_latlong) %>% 
+    interrogate()
+#creates a table, left side is the rules you implemented
+```
+
